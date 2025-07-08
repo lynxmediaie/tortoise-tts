@@ -5,7 +5,10 @@ COPY . /app
 RUN apt-get update && \
     apt-get install -y --allow-unauthenticated --no-install-recommends \
     wget \
+    gcc \
     git \
+    build-essential \
+    gfortran \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
@@ -29,6 +32,7 @@ SHELL ["/bin/bash", "--login", "-c"]
 RUN conda create --name tortoise python=3.9 numba inflect -y \
     && conda activate tortoise \
     && conda install --yes pytorch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 pytorch-cuda=12.1 -c pytorch -c nvidia \
-    && conda install --yes transformers=4.31.0 \
+    && conda install --yes transformers=4.31.0 spacy \
+    && python -m spacy download en_core_web_sm \
     && cd /app \
     && python setup.py install

@@ -28,8 +28,9 @@ setuptools.setup(
         'scipy',
         'librosa',
         'transformers==4.31.0',
-        'tokenizers==0.14.0',
-        'scipy==1.13.1'
+        'tokenizers==0.13.0',
+        'scipy==1.12.0',
+        'scikit-learn==1.6.0',
         # 'deepspeed==0.8.3',
     ],
     classifiers=[
