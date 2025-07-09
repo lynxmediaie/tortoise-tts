@@ -31,7 +31,9 @@ setuptools.setup(
         'tokenizers==0.13.0',
         'scipy==1.12.0',
         'scikit-learn==1.6.0',
-        # 'deepspeed==0.8.3',
+        'fastapi',
+        'uvicorn',
+        'deepspeed==0.8.3',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

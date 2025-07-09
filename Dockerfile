@@ -31,6 +31,7 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 RUN conda create --name tortoise python=3.9 numba inflect -y \
     && conda activate tortoise \
+    && pip install hf_xet \
     && conda install --yes pytorch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 pytorch-cuda=12.1 -c pytorch -c nvidia \
     && conda install --yes transformers=4.31.0 spacy \
     && python -m spacy download en_core_web_sm \

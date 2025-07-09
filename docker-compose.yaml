@@ -1,0 +1,26 @@
+services:
+  tortoise-tts:
+    image: tortoise-tts:0.2
+    container_name: tortoise-tts
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      # visible to PyTorch’s JIT compiler
+      - CUDA_HOME=/usr/local/cuda
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+    volumes:
+      - .:/app
+    stdin_open: true    # -i
+    tty: true           # -t
+    ports:
+      - 8000:8000
+    working_dir: /app/tortoise
+#    command: . /root/miniconda/etc/profile.d/conda.sh && \
+#            conda activate tortoise && \
+#            python app.py
