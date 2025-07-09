@@ -8,9 +8,11 @@ def run_curl_request():
     url = "http://localhost:8000/tts"
     headers = {"Content-Type": "application/json"}
 
-    file_path = "./1wav.txt"
+    file_path = "/app/1wav.txt"
 
     data = {
+        # "text": "Hello, this is a test of the text-to-speech system.",
+        "file": file_path,
         "voice": "zebrak",
         "preset": "high_quality",
         "kv_cache": True,
@@ -23,9 +25,7 @@ def run_curl_request():
         "cvvp_amount": 0.0
     }
 
-    with open(file_path, "rb") as f:
-        files = {"file": (file_path, f)}
-        response = requests.post(url, headers=headers, data=json.dumps(data), files=files)
+    response = requests.post(url, headers=headers, data=json.dumps(data))
 
     if response.status_code == 200:
         print("Request was successful.")

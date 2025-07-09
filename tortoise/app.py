@@ -3,14 +3,14 @@ import runpy
 import subprocess
 import sys
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, UploadFile
 
 app = FastAPI()
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.StreamHandler()
+        logging.StreamHandler(sys.stdout)  # Log to stdout
     ]
 )
 
@@ -33,29 +33,43 @@ async def tts(request: Request):
 
     """
     args = await request.json()
-    logging.info(f"Received request with args: {args}")
+    if args:
+        logging.info(f"Received request with args: {args}")
+        if "file"     in args:
+            # open the file on the path provided in the request and read it that is the text to be converted to speech
+            try:
+                with open(args["file"], 'rb') as f:
+                    args["text"] = f.read().decode("utf-8")
+                args.pop("file")
+            except Exception as e:
+                logging.error(f"Error reading file {args['file']}: {e}")
+                return {"error": "Failed to read file"}
 
-    # If the request contains files, we can handle them here
-    files = await request.form()
-    # Verify if there is just one file
-    if 'file' in files:
-        file = files['file']
-        if file.filename:
-            # Save the file to a temporary location
-            temp_file_path = f"/tmp/{file.filename}"
-            with open(temp_file_path, 'wb') as f:
-                f.write(await file.read())
-                # make the text arg the content of the file
-            with open(temp_file_path, 'r', encoding='utf-8') as f:
-                text = f.read()
-                print(text)
-                args['text'] = text
 
-    print(args)  # Print the keys of the request JSON for debugging
-    # Extract parameters from the request
-    args_list = [f"--{key}={value}" for key, value in args.items() if value is not None]
-    logging.info(f"Calling TTS with args: {args_list}")
+
+
+        print(args)  # Print the keys of the request JSON for debugging
+        # Extract parameters from the request
+        args_list = []
+        for key, value in args.items():
+            if value is not None:
+                args_list.append(f"--{key}")
+                args_list.append(f"{value}")
+
+        logging.info(f"Calling TTS with args: {args_list}")
+        print(f"Calling TTS with args: {args_list}")  # Print the keys of the request JSON for debugging
+    else:
+        args_list = {}
+
+    try:
+        file = await request.get('file', None)
+        text = (await file.read()).decode("utf-8")
+        args["text"] = text  # Only overwrite if file is uploaded
+    except Exception:
+        pass
+
     print(f"Calling TTS with args: {args_list}")  # Print the keys of the request JSON for debugging
+
 
     call_tts_inline("do_tts.py", args_list)
 
