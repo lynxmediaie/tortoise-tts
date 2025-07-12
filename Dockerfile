@@ -37,3 +37,7 @@ RUN conda create --name tortoise python=3.9 numba inflect -y \
     && python -m spacy download en_core_web_sm \
     && cd /app \
     && python setup.py install
+
+WORKDIR /app/tortoise
+
+CMD ["python", "-m", "app.py"]

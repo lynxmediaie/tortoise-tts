@@ -14,10 +14,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--textfile', type=str, help='A file containing the text to read.', default="tortoise/data/riding_hood.txt")
     parser.add_argument('--voice', type=str, help='Selects the voice to use for generation. See options in voices/ directory (and add your own!) '
-                                                 'Use the & character to join two voices together. Use a comma to perform inference on multiple voices.', default='pat')
+                                                 'Use the & character to join two voices together. Use a comma to perform inference on multiple voices.', default='zebrak')
     parser.add_argument('--output_path', type=str, help='Where to store outputs.', default='results/longform/')
     parser.add_argument('--output_name', type=str, help='How to name the output file', default='combined.wav')
-    parser.add_argument('--preset', type=str, help='Which voice preset to use.', default='standard')
+    parser.add_argument('--preset', type=str, help='Which voice preset to use.', default='high_quality')
     parser.add_argument('--regenerate', type=str, help='Comma-separated list of clip numbers to re-generate, or nothing.', default=None)
     parser.add_argument('--candidates', type=int, help='How many output candidates to produce per-voice. Only the first candidate is actually used in the final product, the others can be used manually.', default=1)
     parser.add_argument('--model_dir', type=str, help='Where to find pretrained model checkpoints. Tortoise automatically downloads these to .models, so this'
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     with open(args.textfile, 'r', encoding='utf-8') as f:
         text = ' '.join([l for l in f.readlines()])
     if '|' in text:
-        print("Found the '|' character in your text, which I will use as a cue for where to split it up. If this was not"
+        print("Found the '|' character in your text, which I will use as a cue for where to split it up. If this was not "
               "your intent, please remove all '|' characters from the input.")
         texts = text.split('|')
     else:
